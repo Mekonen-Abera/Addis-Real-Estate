@@ -9,7 +9,6 @@ import {
 FaBath,
 FaBed,
 FaChair,
-FaMapMarkedAlt,
 FaMapMarkerAlt,
 FaParking,
 FaShare,
@@ -30,9 +29,9 @@ useEffect(() => {
     const fetchListing = async () => {
     try {
         setLoading(true);
-        const res = await fetch('/API/listing/get/${params.listingId}');
+        const res = await fetch(`/API/listing/get/${params.listingId}`);
         const data = await res.json();
-        if (data.success === false) {
+        if (!data.success) {
         setError(true);
         setLoading(false);
         return;
@@ -51,9 +50,7 @@ useEffect(() => {
 return (
     <main>
     {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
-    {error && (
-        <p className='text-center my-7 text-2xl'>Something went wrong!</p>
-    )}
+    {error && <p className='text-center my-7 text-2xl'>Something went wrong!</p>}
     {listing && !loading && !error && (
         <div>
         <Swiper navigation>
@@ -62,11 +59,11 @@ return (
                 <div
                 className='h-[550px]'
                 style={{
-                    background: 'url(${url}) center no-repeat',
+                    background: `url(${url}) center no-repeat`,
                     backgroundSize: 'cover',
-                }} >
-                </div>
-                </SwiperSlide>
+                }}
+                />
+            </SwiperSlide>
             ))}
         </Swiper>
         <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
@@ -94,7 +91,7 @@ return (
                 : listing.regularPrice.toLocaleString('en-US')}
             {listing.type === 'rent' && ' / month'}
             </p>
-            <p className='flex items-center mt-6 gap-2 text-slate-600  text-sm'>
+            <p className='flex items-center mt-6 gap-2 text-slate-600 text-sm'>
             <FaMapMarkerAlt className='text-green-700' />
             {listing.address}
             </p>
@@ -113,38 +110,38 @@ return (
             {listing.description}
             </p>
             <ul className='text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6'>
-            <li className='flex items-center gap-1 whitespace-nowrap '>
+            <li className='flex items-center gap-1 whitespace-nowrap'>
                 <FaBed className='text-lg' />
                 {listing.bedrooms > 1
-                ? `${listing.bedrooms} beds `
-                : `${listing.bedrooms} bed `}
+                ? `${listing.bedrooms} beds`
+                : `${listing.bedrooms} bed`}
             </li>
-            <li className='flex items-center gap-1 whitespace-nowrap '>
+            <li className='flex items-center gap-1 whitespace-nowrap'>
                 <FaBath className='text-lg' />
                 {listing.bathrooms > 1
-                ? '${listing.bathrooms} baths '
-                : '${listing.bathrooms} bath '}
+                ? `${listing.bathrooms} baths`
+                : `${listing.bathrooms} bath`}
             </li>
-            <li className='flex items-center gap-1 whitespace-nowrap '>
+            <li className='flex items-center gap-1 whitespace-nowrap'>
                 <FaParking className='text-lg' />
                 {listing.parking ? 'Parking spot' : 'No Parking'}
             </li>
-            <li className='flex items-center gap-1 whitespace-nowrap '>
+            <li className='flex items-center gap-1 whitespace-nowrap'>
                 <FaChair className='text-lg' />
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
-                </li>
+            </li>
             </ul>
             {currentUser && listing.userRef !== currentUser._id && !contact && (
-                <button
+            <button
                 onClick={() => setContact(true)}
                 className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'>
                 Contact landlord
-                </button>
+            </button>
             )}
             {contact && <Contact listing={listing} />}
-            </div>
         </div>
-)}
+        </div>
+    )}
     </main>
 );
 }
